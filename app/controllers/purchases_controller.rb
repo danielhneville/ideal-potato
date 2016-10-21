@@ -1,4 +1,7 @@
 class PurchasesController < ApplicationController
+  
+  before_action :require_login
+
   def create
   	p_params = purchase_params
   	p_params['shoe'] = Shoe.find(purchase_params['shoe_id'])

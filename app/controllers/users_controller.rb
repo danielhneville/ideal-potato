@@ -1,4 +1,8 @@
 class UsersController < ApplicationController
+
+  before_action :require_login, only: :show
+  before_action :require_correct_user, only: :show
+
   def show
   	@shoe = Shoe.new
     @bought = Purchase.pluck(:shoe_id)

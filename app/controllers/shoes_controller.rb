@@ -1,4 +1,7 @@
 class ShoesController < ApplicationController
+
+  before_action :require_login
+
   def index
   	@bought = Purchase.pluck(:shoe_id)
   	@products = Shoe.where.not(id: @bought)

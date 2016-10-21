@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
   
   def require_correct_user
   	user = User.find(params[:id])
-  	redirect_to edit_user_path(current_user.id) if current_user != user
+  	redirect_to "/dashboard/#{current_user['id']}" if current_user != user
   end
 
 end
