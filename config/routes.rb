@@ -1,3 +1,9 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  root :to => redirect('/main')
+  resources 'sessions', only: [:create, :destroy]
+  get '/main' => 'sessions#new'
+  resources 'users', only: :create
+  get '/dashboard/:id' => 'users#show'
+  resources 'shoes', only: [:index, :create, :destroy]
+  resources 'purchases', only: :create
 end

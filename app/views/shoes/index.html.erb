@@ -1,0 +1,35 @@
+<p>Hi <%= current_user.first_name %></p>
+<a href="/dashboard/<%= current_user['id'] %>">User Dashboard</a>
+<a href="<%= session_path('logout') %>" data-method="delete">Logout</a>
+<h1>All Products</h1>
+<table>
+	<thead>
+		<tr>
+			<th>Product</th>
+			<th>Seller</th>
+			<th>Date Posted</th>
+			<th>Amount</th>
+			<th>Action</th>
+		</tr>
+	</thead>
+	<tbody>
+		<% @products.each do |p| %>
+			<% if @bought.include?(p.id) %>
+			<tr><td colspan="4">Bought</td></tr>
+			<% else %>
+			<tr>
+				<td><%= p.name %></td>
+				<td><%= p.user.first_name %> <%= p.user.last_name %></td>
+				<td><%= p.created_at.strftime('%D') %></td>
+				<td><%= number_to_currency(p.price) %></td>
+				<td>
+					<%= form_for @purchase do |f| %>
+						<%= f.hidden_field :shoe_id, :value => p.id %>
+						<%= f.submit :value => "Buy" %>
+					<% end %>
+				</td>
+			</tr>
+			<% end %>
+		<% end %>
+	</tbody>
+</table>

@@ -1,0 +1,98 @@
+<p>Hi <%= current_user.first_name %></p>
+<a href="<%= shoes_path %>">All Products</a>
+<a href="<%= session_path %>" data-method="delete">Logout</a>
+
+<div>
+	<h2>Sell Product</h2>
+
+	<% if flash[:errors] %>
+		<% flash[:errors].each do |err| %>
+			<p><%= err %></p>
+		<% end %>
+	<% end %>
+
+	<%= form_for @shoe do |f| %>
+
+		<%= f.label :name %>
+		<%= f.text_field :name %>
+
+		<%= f.label :price %>
+		<%= f.number_field :price, :step => 0.01 %>
+
+		<%= f.submit :value => "List for Sale" %>
+
+	<% end %>
+</div>
+<div>
+	<h2>Your Listed Products</h2>
+	<table>
+		<thead>
+			<tr>
+				<th>Product</th>
+				<th>Date Posted</th>
+				<th>Amount</th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% @listed.each do |s| %>
+				<% unless @sold.include?(s) %>
+				<tr>
+					<td><%= s.name %></td>
+					<td><%= s.created_at.strftime('%D') %></td>
+					<td><%= number_to_currency(s.price) %></td>
+					<td><a href="<%= shoe_path(s.id) %>" data-method="delete">Delete</a></td>
+				</tr>
+				<% end %>
+			<% end %>
+		</tbody>
+	</table>
+</div>
+<div>
+	<h2>Your Sold Products</h2>
+	<table>
+		<thead>
+			<tr>
+				<th>Product</th>
+				<th>Date Bought</th>
+				<th>Buyer</th>
+				<th>Amount</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% @sold.each do |s| %>
+			<tr>
+				<td><%= s.shoe.name %></td>
+				<td><%= s.created_at.strftime('%D') %></td>
+				<td><%= s.shoe.buyer.first_name %> <%= s.shoe.buyer.last_name %></td>
+				<td><%= number_to_currency(s.shoe.price) %></td>
+			</tr>
+			<% end %>
+		</tbody>
+	</table>
+	<h3>Total: <%= number_to_currency(@sold.sum(:price)) %></h3>
+</div>
+<div>
+	<h2>Your Purchased Products</h2>
+	<table>
+		<thead>
+			<tr>
+				<th>Product</th>
+				<th>Date Bought</th>
+				<th>Seller</th>
+				<th>Amount</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% @purchased.each do |s| %>
+			<tr>
+				<td><%= s.name %></td>
+				<td><%= s.purchase.created_at.strftime('%D') %></td>
+				<td><%= s.user.first_name %> <%= s.user.last_name %></td>
+				<td><%= number_to_currency(s.price) %></td>
+			</tr>
+			<% end %>
+		</tbody>
+	</table>
+	<h3>Total: <%= number_to_currency(@purchased.sum(:price)) %></h3>
+</div>
